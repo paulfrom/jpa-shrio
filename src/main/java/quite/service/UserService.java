@@ -6,10 +6,17 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import quite.dao.SysRoleDao;
 import quite.dao.SysUserDao;
+import quite.entity.rightMoudle.SysResource;
 import quite.entity.rightMoudle.SysUser;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 /**
  * Created by acer on 2015/7/12.
@@ -22,6 +29,9 @@ public class UserService {
     private SysUserDao sysUserDao;
 
     private SysRoleDao sysRoleDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @CachePut(value = "userCache",key="#result.id")
     public SysUser findUserByLoginName(String loginName){
@@ -42,9 +52,15 @@ public class UserService {
      * Date: ${DATE}
      * Desc:
      */
+    @Transactional(readOnly = false,propagation = Propagation.REQUIRED)
     public boolean updateUser(SysUser user) {
-        SysUser sysUser = sysUserDao.save(user);
-        return sysUser!=null;
+        Query query = em.createNativeQuery("select * from sys_resource", SysResource.class);
+        List<SysResource> list= (List<SysResource>) query.getResultList();
+        Query count = em.createNativeQuery("UPDATE sys_user SET  loginName = ? where id=?");
+        count.setParameter(1,user.getLoginName());
+        count.setParameter(2,user.getId());
+        int cou=count.executeUpdate();
+        return cou>0;
     }
 
     /**

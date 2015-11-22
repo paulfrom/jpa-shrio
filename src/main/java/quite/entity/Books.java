@@ -40,7 +40,7 @@ public class Books  implements Serializable {
     @Column(nullable = false)
     private String author;
     @Column(nullable = false)
-    private Date createdTime;
+    private Date created_time;
     @Column(nullable = false)
     private Boolean expired;
 
@@ -76,12 +76,12 @@ public class Books  implements Serializable {
         this.author = author;
     }
 
-    public Date getCreatedTime() {
-        return createdTime;
+    public Date getCreated_time() {
+        return created_time;
     }
 
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
+    public void setCreated_time(Date created_time) {
+        this.created_time = created_time;
     }
 
     public Boolean getExpired() {

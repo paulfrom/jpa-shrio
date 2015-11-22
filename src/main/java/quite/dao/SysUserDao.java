@@ -9,6 +9,7 @@ import com.google.common.base.Optional;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import quite.entity.rightMoudle.SysUser;
 
 public interface SysUserDao extends PagingAndSortingRepository<SysUser, Integer>, JpaSpecificationExecutor<SysUser> {
@@ -19,4 +20,7 @@ public interface SysUserDao extends PagingAndSortingRepository<SysUser, Integer>
 
 	@Query("select count(0) from SysUser s where loginName=? and id !=?")
 	int countByLoginNameAndId(String loginName, String id);
+
+//	@Query("update SysUser (LoginName)values(:user.loginName) where id = :user.id")
+//	SysUser saveWithoutPassword(@Param("user") SysUser user);
 }
