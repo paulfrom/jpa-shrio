@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	  layout:decorator="background/layout">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>后台资源列表</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+	</head>
+
+	<body class="no-skin">
+	<div id="content" layout:fragment="content">
+		<div class="page-content">
+			<div class="page-header">
+				<div class="pull-right">
+					<a href="javaScript:void(0)" role="button" class="btn btn-white btn-success" onclick="openModal()">新增资源</a>
+				</div>
+				<h1>
+					后台资源
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						列表
+					</small>
+				</h1>
+
+
+			</div><!-- /.page-header -->
+
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group">
+								<div class="controls">
+									<ul id="tree" class="ztree"></ul>
+								</div>
+							</div>
+						</div>
+					</div><!-- /.row -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+
+		</div>
+		<div id="modal-form" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h4 class="blue bigger">新增资源</h4>
+					</div>
+					<form action="/admin/resource/add.json" id="form1" method="post" enctype="multipart/form-data">
+					<div class="modal-body">
+						<fieldset>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">资源名称：</label>
+									<div class="controls">
+										<input type="hidden" value="" name="id" id="add_id"/>
+										<input class="input-xlarge focused"  type="text" value="" name="resourceName" id="add_resourceName"/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">资源地址：</label>
+									<div class="controls">
+										<input class="input-xlarge focused"  type="text" value="" name="resourceUrl" id="add_resourceUrl"/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">权限名称：</label>
+									<div class="controls">
+										<input class="input-xlarge focused"  type="text" value="" name="permissionName" id="add_permissionName"/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">父资源：</label>
+									<div class="controls">
+										<select class="input-xlarge focused" name="pid" id="add_pid">
+											<option value="0">系统资源</option>
+											<option th:each="item:${page}" th:value="${item.id}" th:if="${item.pid==0}" th:text="${item.resourceName}"></option>
+										</select>
+									</div>
+								</div>
+						</fieldset>
+					</div>
+
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-sm" data-dismiss="modal">
+							<i class="ace-icon fa fa-times"></i>
+							取消
+						</button>
+						<button type="button" onclick="submitBut(this)" class="btn btn-sm btn-primary">
+							<i class="ace-icon fa fa-check"></i>
+							确定
+						</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			jQuery(function(){
+				$("#form1").validate({
+					checkStart : true,
+					errorElement: 'span',
+					errorClass: 'help-inline',
+					focusInvalid: false,
+					rules : {
+						resourceName:{
+							required:true
+						}
+					},
+					messages : {
+						resourceName : {
+							required:"必填"
+						}
+					},
+					highlight: function (e) {
+						$(e).removeClass('info').addClass('error');
+					}
+				});
+			})
+			function submitBut(item){
+				$("#form1").ajaxSubmit({
+					url: "/admin/resource/add.json",
+					type: "POST",
+					dataType: "json",
+					beforeSend:function(){
+						$("#loadingDiv").show();
+						$(item).removeAttrs("onclick");
+					},
+					success: function (data) {
+						if (data.flag) {
+							alert("提交成功")
+						} else {
+							alert(data.msg)
+						}
+					},
+					complete:function(){
+						window.location.href = "/admin/resource/manager.html";
+					}
+				});
+			}
+			function openModal(){
+				$("#add_id").val("")
+				$("#add_resourceName").val("")
+				$("#add_resourceUrl").val("")
+				$("#add_permissionName").val("")
+				$("#modal-form").modal("show");
+			}
+		</script>
+		<script type="text/javascript" src="../../../js/ztree/jquery.ztree.core-3.5.min.js"></script>
+		<script type="text/javascript" src="../../../js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+		<script type="text/javascript" src="../../../js/ztree/jquery.ztree.exedit-3.5.min.js"></script>
+		<script type="text/javascript"  th:inline="javascript">
+			/*<![CDATA[*/
+			var treeNodes = [[${page}]]
+			var setting = {
+				view: {
+					addHoverDom: addHoverDom,
+					removeHoverDom: removeHoverDom,
+					selectedMulti: false
+				},
+				edit: {
+					enable: true,
+					editNameSelectAll: true,
+					showRemoveBtn: showRemoveBtn,
+					showRenameBtn: showRenameBtn
+				},
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "id",
+						pIdKey: "pid"
+					},
+					key:{
+						name:'resourceName'
+					}
+				},
+				callback: {
+					beforeEditName: beforeEditName,
+					beforeRemove: beforeRemove,
+					onRemove: onRemove,
+				}
+			};
+			function beforeEditName(treeId, treeNode) {
+				$("#add_id").val(treeNode.id)
+				$("#add_resourceName").val(treeNode.resourceName)
+				$("#add_resourceUrl").val(treeNode.resourceUrl)
+				$("#add_permissionName").val(treeNode.permissionName)
+				$("#add_pid").find("option").each(function(index,item){if($(item).val()==treeNode.pid)$(this).prop("selected","true")})
+				$("#modal-form").modal("show");
+				return false;
+			}
+			function beforeRemove(treeId, treeNode) {
+				var zTree = $.fn.zTree.getZTreeObj("tree");
+				zTree.selectNode(treeNode);
+				return confirm("确认删除 资源 -- " + treeNode.resourceName + " 吗？");
+			}
+			function onRemove(e, treeId, treeNode) {
+				$.ajax({
+					url: "/admin/resource/delete.json",
+					type: "POST",
+					data:{"resourceId":treeNode.id},
+					dataType: "json",
+					beforeSend:function(){
+						$("#loadingDiv").show();
+					},
+					success: function (data) {
+						if(data){
+							alert("删除成功")
+						}
+					},
+					complete:function(){
+						$("#loadingDiv").hide();
+					}
+				})
+			}
+			function showRemoveBtn(treeId, treeNode) {
+				return !(treeNode.level==0);
+			}
+			function showRenameBtn(treeId, treeNode) {
+				return true;
+			}
+			function addHoverDom(treeId, treeNode) {
+				var sObj = $("#" + treeNode.tId + "_span");
+				if (treeNode.level!=0 || $("#addBtn_"+treeNode.tId).length>0) return;
+				var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+						+ "' title='add node' onfocus='this.blur();'></span>";
+				sObj.after(addStr);
+				var btn = $("#addBtn_"+treeNode.tId);
+				if (btn) btn.bind("click", function(){
+					$("#add_id").val("")
+					$("#add_resourceName").val("")
+					$("#add_resourceUrl").val("")
+					$("#add_permissionName").val("")
+					$("#modal-form").modal("show");
+				});
+			};
+			function removeHoverDom(treeId, treeNode) {
+				$("#addBtn_"+treeNode.tId).unbind().remove();
+			};
+
+			$(document).ready(function(){
+				var tree=$.fn.zTree.init($("#tree"), setting,treeNodes);
+				tree.expandAll(true);
+			});
+			/*]]>*/
+		</script>
+	</div>
+	</body>
+</html>

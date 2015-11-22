@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	  layout:decorator="background/layout">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>后台用户列表</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<link rel="stylesheet" href="../../../../js/select2/select2.css" />
+		<link rel="stylesheet" href="../../../../js/select2/select2-bootstrap.css" />
+	</head>
+	<body class="no-skin">
+	<div id="content" layout:fragment="content">
+		<div class="page-content">
+			<div class="page-header">
+				<div class="pull-right">
+					<a href="javascript:void(0)" role="button" class="btn btn-white btn-success" onclick="refreshModal()">新增用户</a>
+				</div>
+				<h1>
+					后台用户
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						列表
+					</small>
+				</h1>
+
+
+			</div><!-- /.page-header -->
+
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-inline" id="searchForm" action="/user/manager.html" role="form">
+								<div class="widget-main">
+									<label class="inline">用户名</label>
+									<input class="input-middle" type="text" name="filter[userName]" id="form-field-icon-1"/>
+									<label class="inline">登录名</label>
+									<input class="input-middle" type="text" name="filter[loginname]" id="form-field-icon-2"/>
+									<label class="inline">部门</label>
+									<button type="submit" onclick="initPage()" class="btn btn-info btn-sm">
+										查询
+									</button>
+								</div>
+							</form>
+						</div>
+
+						<div class="space-4"></div>
+						<div class="col-xs-12">
+							<div class="modal-body">
+							<form action="/admin/user/add.json" id="form1" method="post" enctype="multipart/form-data">
+								<fieldset>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">select2,多选,非ajax：</label>
+								<div class="">
+									<select multiple="" id="selectNone" class="select2 tag-input-style" data-placeholder="选择姓名">
+										<option th:each="item:${list}" th:value="${item.id}" th:text="${item.name}">Alabama</option>
+									</select>
+								</div>
+							</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">select2,多选,ajax：</label>
+										<div class="">
+											<input type="text" style="width: 500px" id="ajaxS2" class="select2 tag-input-style"/>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">select2,单选,非ajax：</label>
+										<div class="">
+											<select name="roleIds" class="select3 tag-input-style" data-placeholder="选择姓名">
+												<option th:each="item:${list}" th:value="${item.id}" th:text="${item.name}">Alabama</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group employeeGroup">
+										<label for="uiauto" class="col-sm-3 control-label no-padding-right"> jqueryUi autocomplete ajax: </label>
+										<div class="col-sm-9">
+											<input class="col-xs-10 col-sm-5" type="text" placeholder="" name="name"  id="uiauto" />
+										</div>
+									</div>
+									</fieldset>
+								</form>
+								</div>
+						</div><!-- /.span -->
+					</div><!-- /.row -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+		<div id="add-modal-form" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h4 class="blue bigger">xxxx</h4>
+				</div>
+				<form action="" id="form2" method="post">
+					<div class="modal-body">
+						<fieldset>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">用户名称：</label>
+								<div class="">
+									<input type="hidden" value="" name="id" id="add_id"/>
+									<input class="input-xlarge focused editValid"  type="text" value="" name="userName" id="add_userName"/>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-sm" data-dismiss="modal">
+							<i class="ace-icon fa fa-times"></i>
+							取消
+						</button>
+						<button type="button" onclick="submitUser(this,true)" id="subButton" class="btn btn-sm btn-primary">
+							<i class="ace-icon fa fa-check"></i>
+							确定
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+		<script src="../../../../assets/js/jquery-ui.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				$( "#uiauto" ).autocomplete({
+					minLength: 1,
+					messages: {
+						noResults: '',
+						results: function() {}
+					},
+					source:function( request, response ) {
+						$.ajax({
+							url: "/admin/common/jqueryUI.json",
+							dataType: "json",
+							data: {
+								name: request.term,
+								pageSize:10
+							},
+							success: function( expert ) {
+								response(expert.list);
+							}
+						});
+					},
+					focus: function( event, ui ) {
+						console.log("上下键选择、鼠标定位选择")
+						console.log(ui.item)
+						$( "#uiauto").val(ui.item.name)
+						return false;
+					},
+					select: function( event, ui ) {
+						console.log("选择点击事件")
+						console.log(event)
+						$( "#uiauto").val(ui.item.name)
+						console.log(ui.item)
+						return false;
+					}
+				}).autocomplete( "instance" )._renderItem = function( ul, item ) {
+					return $( "<li></li>").addClass("grey")
+							.append( "<a>姓名:" + item.name + "<br/>部门:" + item.dept + "</a>" )
+							.appendTo(ul);
+				};
+			})
+		</script>
+		<script src="../../../../js/select2/select2.min.js"></script>
+		<script src="../../../../js/select2/select2_locale_zh-CN.js"></script>
+		<script type="text/javascript">
+			/*<![CDATA[*/
+			jQuery(function($) {
+				$('#selectNone').css('width','270px').select2({allowClear:true,maximumSelectionSize:2})
+				$('.select3').css('width','270px').select2({allowClear:true,maximumSelectionSize:2})
+				var formatSelection = function(bond) {
+					console.log(bond)
+					return bond.name
+				}
+
+				var formatResult = function(bond) {
+					return '<div class="select2-user-result">' + bond.name + '</div>'+'<div class="select2-user-result">' + bond.dept + '</div>'
+				}
+
+				var initSelection = function(elem, cb) {
+					return elem
+				}
+
+				$('#ajaxS2').select2({
+					searchInputPlaceholder: "输入一个员工名字",
+					minimumInputLength: 1,
+					maximumSelectionSize:1,//最多选一个
+					multiple: true,
+					quietMillis: 100,
+					ajax: {
+						url: "/admin/common/jqueryUI.json",
+						dataType: 'json',
+						type: 'POST',
+						data: function(term, page) {
+							return {
+								name: term,
+								pageSize: page || 1
+							}
+						},
+						results: function(bond, page) {
+							return {results: bond.list, more: (bond.list && bond.list.length == 10 ? true: false)}
+						}
+					},
+					formatResult: formatResult,
+					formatSelection: formatSelection,
+					initSelection: initSelection
+				})
+			});
+			/*]]>*/
+		</script>
+	</div>
+	</body>
+</html>

@@ -1,0 +1,11 @@
+/*翻页*/
+.pagination{margin:40px 0;padding-right:10px;font-size:0;text-align: center;}
+.pagination a,.pagination span{display:inline-block;margin-right:2px;padding:0 5px;min-width:16px;_width:16px;height:24px;line-height:24px;border:1px solid #ccc;vertical-align:top;text-decoration:none;text-align:center;font-size:12px;white-space:nowrap;word-wrap:normal;}
+.pagination .page-break,.pagination .page-skip{height:26px; line-height:26px;border:none;}
+.pagination .page-prev,.pagination .page-next{font-family:sans-serif;color:#033333;font-weight: bold;}
+.pagination a:hover,.pagination .page-cur{ color:#fff; text-decoration:none;border-color:#1c79dd;background-color:#1c79dd;}
+.pagination .page-submit{display:inline-block;margin:0 10px;padding: 0;width:51px; height:24px;background:#f3f3f3;color:#333;border:1px solid #ccc;}
+.pagination .page-submit:hover{background-color:#f3f3f3;color:#333;}
+.pagination .page-num{ margin:0 5px;width:50px; height:20px; line-height:20px; text-align:center;border:1px solid #ddd;}
+.pagination .dis,
+.pagination .dis:hover {color:#b0b0b0;background-color: #fff;border-color:#ccc;cursor:default;}

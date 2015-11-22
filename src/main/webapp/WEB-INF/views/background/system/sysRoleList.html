@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	  layout:decorator="background/layout">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>后台角色列表</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+
+	</head>
+
+	<body class="no-skin">
+	<div id="content" layout:fragment="content">
+		<div class="page-content">
+			<div class="page-header">
+				<div class="pull-right">
+					<a href="JavaScript:void(0)" role="button" onclick="refreshModal()" class="btn btn-white btn-success" >新增角色</a>
+				</div>
+				<h1>
+					后台角色
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						列表
+					</small>
+				</h1>
+
+
+			</div><!-- /.page-header -->
+
+
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-xs-12">
+						<form class="form-horizontal" id="searchForm" action="/admin/role/manager.html" role="form">
+							<input type="hidden" name="page" th:value="${page.page}"/>
+							<input type="hidden" name="totalPage" th:value="${page.totalPage}"/>
+						<div class="form-group">
+							<div class="col-sm-3">
+								<label>角色名称</label>
+								<input type="text" name="filter[roleName]" th:value="${page.filter[roleName]}" id="form-field-icon-1"/>
+							</div>
+							<div class="col-sm-2">
+								<button type="submit" onclick="initPage()" class="btn btn-info btn-sm">
+									查询
+								</button>
+							</div>
+						</div>
+						</form>
+						</div>
+
+						<div class="space-4"></div>
+						<div class="col-xs-12">
+							<table id="simple-table" class="table table-striped table-bordered table-hover">
+								<thead>
+								<tr>
+									<th>序号</th>
+									<th>角色名称</th>
+									<th>角色描述</th>
+									<th>创建人</th>
+									<th>创建时间</th>
+									<th>操作</th>
+								</tr>
+								</thead>
+
+								<tbody>
+								<tr th:each="item,s:${page.result}" >
+									<td th:text="${s.count}"></td>
+									<td th:text="${item.id}" style="display: none"></td>
+									<td th:text="${item.roleName}"></td>
+									<td th:text="${item.roleDescription }"></td>
+									<td th:text="${item.Pid }" style="display:none;"></td>
+									<td th:text="${item.createUser}"></td>
+									<td th:text="${item.createTime}"></td>
+									<td>
+										<button class="btn btn-xs btn-success" onclick="checkRight(this.id,this,false)" th:id="${item.id}" th:each="item2:${proles}" th:if="${item2.id!=item.id}">
+											编辑
+										</button>
+										<button class="btn btn-xs btn-success" onclick="checkRight(this.id,this,true)" th:id="${item.id}" th:each="item2:${proles}" th:if="${item2.id==item.id}">
+											查看
+										</button>
+										<button class="btn btn-xs btn-info" th:id="${item.id}" onclick="deleteRole(this.id,this)" th:each="item2:${proles}" th:if="${item2.id!=item.id}" >
+											删除
+										</button>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+							<div style="margin-bottom: 0px; margin-left: auto;margin-right: auto;text-align:center">
+								<div id="example" style="margin-bottom:0px;text-align:center"></div>
+							</div>
+						</div><!-- /.span -->
+					</div><!-- /.row -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+		<div id="modal-form" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h4 class="blue bigger">新增角色</h4>
+					</div>
+					<form id="form1" method="post">
+					<div class="modal-body">
+						<fieldset>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">角色名称：</label>
+									<div class="controls">
+										<input class="input-xlarge focused"  type="text" value="" name="roleName" id="add_roleName"/>
+										<input type="hidden" value="" name="id" id="add_id"/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">角色描述：</label>
+									<div class="controls">
+										<input class="input-xlarge focused"  type="text" value="" name="roleDescription" id="add_roleDescription"/>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">父资源：</label>
+									<div class="controls">
+										<select class="input-xlarge focused" id="add_pid" name="pid">
+											<option th:each="item:${proles}" th:value="${item.id}" th:text="${item.roleName}"></option>
+										</select>
+									</div>
+								</div>
+							<div class="form-group">
+								<div class="controls">
+									<ul id="tree" class="ztree"></ul>
+								</div>
+							</div>
+
+						</fieldset>
+					</div>
+
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-sm" data-dismiss="modal">
+							<i class="ace-icon fa fa-times"></i>
+							取消
+						</button>
+						<button type="button" onclick="submitChange(this)" id="subButton" class="btn btn-sm btn-primary">
+							<i class="ace-icon fa fa-check"></i>
+							确定
+						</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			jQuery(function(){
+				$("#form1").validate({
+					checkStart : true,
+					errorElement: 'span',
+					errorClass: 'help-inline',
+					focusInvalid: false,
+					rules : {
+						roleName:{
+							required:true
+						},
+						roleDescription : {
+							required:true
+						}
+					},
+					messages : {
+						roleName : {
+							required:"必填"
+						},
+						roleDescription :{
+							required:"必填"
+						}
+					},
+					highlight: function (e) {
+						$(e).removeClass('info').addClass('error');
+					}
+				});
+			});
+			function refreshModal(){
+				$("#add_id").val(" ");
+				$("#add_roleName").val(" ");
+				$("#add_roleDescription").val(" ");
+				$("#add_pid").find("option").each(function(index){if(index==0)$(this).attr("selected","true")});
+				var treeObj = $.fn.zTree.getZTreeObj("tree");
+				treeObj.checkAllNodes(false);
+				$("#subButton").removeAttrs("disabled");
+				$("#modal-form").modal("show");
+			}
+			function submitChange(item){
+				if($("#form1").valid()) {
+					var zTree = $.fn.zTree.getZTreeObj("tree");
+					checkCount = zTree.getCheckedNodes(true);
+					var classpurview = "";
+					for(var i=0;checkCount.length>i;i++) {
+						if(i==0){
+							classpurview=checkCount[i].id;
+						}else{
+							classpurview += "," + checkCount[i].id
+						}
+					}
+					if(classpurview==null || classpurview==''){
+						alert("请选择角色权限");
+						return;
+					}
+					$("#form1").ajaxSubmit({
+						url: "/admin/role/add.json",
+						type: "POST",
+						data:{"resourceIds":classpurview},
+						dataType: "json",
+						beforeSend:function(){
+							$("#loadingDiv").show();
+							$(item).removeAttrs("onclick");
+						},
+						success: function (data) {
+							if (data.flag) {
+								alert("提交成功")
+							} else {
+								alert(data.msg)
+							}
+						},
+						complete:function(){
+							window.location.href = "/admin/role/manager.html";
+						}
+					});
+				}
+			}
+			function getChildren(ids,treeNode) {
+				if (treeNode.length > 0) {
+					for (var i in treeNode) {
+						ids.push(treeNode[i]);
+						if (treeNode[i].isParent) {
+							for (var obj in treeNode[i].children) {
+								getChildren(ids, treeNode[i].children[obj]);
+							}
+						}
+					}
+				}else{
+					ids.push(treeNode);
+					if (treeNode.isParent){
+						for(var obj in treeNode.children){
+							getChildren(ids,treeNode.children[obj]);
+						}
+					}
+				}
+				return ids;
+			}
+			function checkRight(id,item,flag){
+				$.ajax({
+					url: "/admin/role/edit.json",
+					type: "POST",
+					data:{"roleId":id},
+					dataType: "json",
+					beforeSend:function(){
+						$("#loadingDiv").show();
+					},
+					success: function (data) {
+							var zTree = $.fn.zTree.getZTreeObj("tree");
+							var nodes=zTree.getNodes();
+							var allNodes=[];
+							allNodes=getChildren(allNodes,nodes)
+							for(var i=0;allNodes.length>i;i++) {
+								zTree.checkNode(allNodes[i],false,false);
+								for(var j=0;data.length>j;j++){
+									if(data[j].id==allNodes[i].id){
+										zTree.checkNode(allNodes[i],true,true);
+									}
+								}
+							}
+							var tds=$(item).parent().parent().find("td");
+							$("#add_id").val($(tds[1]).text())
+							$("#add_roleName").val($(tds[2]).text())
+							$("#add_roleDescription").val($(tds[3]).text())
+							$("#add_pid").find("option").each(function(){if($(this).val()==$(tds[4]).text())$(this).attr("selected","true")})
+							if(flag){
+								$("#subButton").attr("disabled","disabled");
+							}else{
+								$("#subButton").removeAttrs("disabled");
+							}
+							$("#modal-form").modal("show");
+					},
+					complete:function(){
+						$("#loadingDiv").hide();
+					}
+				})
+			}
+			function deleteRole(id,item){
+				if(!confirm("确认删除该资源?删除将不可恢复")){
+					return
+				}
+				$.ajax({
+					url: "/admin/role/delete.json",
+					type: "POST",
+					data:{"roleId":id},
+					dataType: "json",
+					beforeSend:function(){
+						$("#loadingDiv").show();
+					},
+					success: function (data) {
+						if(data){
+							var tr=$(item).parent().parent();
+							$(tr).remove();
+						}
+					},
+					complete:function(){
+						$("#loadingDiv").hide();
+					}
+				})
+			}
+		</script>
+		<script type="text/javascript" src="../../../js/ztree/jquery.ztree.core-3.5.min.js"></script>
+		<script type="text/javascript" src="../../../js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+		<script type="text/javascript"  th:inline="javascript">
+			/*<![CDATA[*/
+			var treeNodes = [[${result}]]
+			var setting = {
+				view: {
+					selectedMulti: true,
+					dblClickExpand: false
+				},
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "id",
+						pIdKey: "pid"
+					},
+					key:{
+						name:'resourceName'
+					}
+				},
+				callback: {
+					onCheck: onCheck
+				}
+			};
+			function onCheck(e,treeId,treeNode){
+			}
+			var tree=$.fn.zTree.init($("#tree"), setting,treeNodes);
+			tree.expandAll(true);
+			/*]]>*/
+		</script>
+	</div>
+	</body>
+</html>

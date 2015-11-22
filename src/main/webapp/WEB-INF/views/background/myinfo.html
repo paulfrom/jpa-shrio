@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	  xmlns:th="http://www.thymeleaf.org"
+	  layout:decorator="background/layout">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>个人信息修改</title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+	</head>
+
+	<body class="no-skin">
+
+	<div id="content" layout:fragment="content">
+		<div class="page-header">
+			<h1>
+				个人信息修改
+			</h1>
+		</div><!-- /.page-header -->
+
+		<div class="row">
+			<div class="col-xs-12">
+				<div>
+					<div id="user-profile-1" class="user-profile row">
+						<div class="col-xs-12 col-sm-2 center">
+							<div>
+								<span class="profile-picture">
+									<a href="#img-modal-form" data-toggle="modal">
+													<img id="avatar" class="editable img-responsive" alt="Alex's Avatar" th:src="${session.user.headPath==null}?'/assets/avatars/profile-pic.jpg':'http://115.29.35.216'+${session.user.headPath}"/>
+									</a>
+									</span>
+									<div class="space-4"></div>
+
+								<div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+									<div class="inline position-relative">
+										<a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+											<i class="ace-icon fa fa-circle light-green"></i>
+											<span class="white" th:text="${session.user.userName}">Alex M. Doe</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-sm-9">
+							<div class="profile-user-info profile-user-info-striped" style="border: 0 solid #dcebf7;">
+										<form action="/admin/user/add.json" id="form2" method="post" enctype="multipart/form-data">
+											<div class="modal-body">
+												<fieldset>
+													<div class="form-group">
+														<label class="col-sm-1 control-label no-padding-right">用户名称：</label>
+														<div class="">
+															<input  th:value="${session.user.id}" type="hidden" name="id" id="edit_id"/>
+															<input class="input-xlarge focused editValid"  type="text" th:value="${session.user.userName}" name="userName" id="edit_userName"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="col-sm-1 control-label no-padding-right">登 录 名：</label>
+														<div class="">
+															<input class="input-xlarge focused"  type="text" th:value="${session.user.loginname}" name="loginname" id="edit_loginname"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="col-sm-1 control-label no-padding-right editValid">手机：</label>
+														<div class="">
+															<input class="input-xlarge focused"  type="text" th:value="${session.user.phone}" name="phone" id="edit_phone" maxlength="11"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="col-sm-1 control-label no-padding-right">qq：</label>
+														<div class="">
+															<input class="input-xlarge focused"  type="text" th:value="${session.user.qq}" name="qq" id="edit_qq" maxlength="11"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="col-sm-1 control-label no-padding-right editValid">邮箱：</label>
+														<div class="">
+															<input class="input-xlarge focused"  type="text" th:value="${session.user.email}" name="email" id="edit_email"/>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<label class="col-sm-1 control-label no-padding-right">职位：</label>
+														<div class="">
+															<input class="input-xlarge focused"  type="text" th:value="${session.user.titleName}" name="titleName" id="edit_titleName" maxlength="11"/>
+														</div>
+													</div>
+												</fieldset>
+											</div>
+
+											<div class="modal-footer center">
+												<button type="reset" onclick="javaScript:history.go(-1)" class="btn btn-sm" data-dismiss="modal">
+													<i class="ace-icon fa fa-times"></i>
+													返回
+												</button>
+
+												<button type="button" onclick="submitUser(this,false)" id="subButton" class="btn btn-sm btn-primary">
+													<i class="ace-icon fa fa-check"></i>
+													确定
+												</button>
+											</div>
+										</form>
+							</div>
+
+							<div class="space-20"></div>
+
+						</div>
+					</div>
+				</div>
+				<!-- PAGE CONTENT ENDS -->
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+		<div id="img-modal-form" class="modal" tabindex="-1" aria-hidden="true" style="display: none;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">×</button>
+						<h4 class="blue bigger">选择头像</h4>
+					</div>
+					<form id="imgForm" action="/admin/user/uploadImage.json" method="post" enctype="multipart/form-data">
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="space"></div>
+									<div id="imgdiv" class="center">
+										<img id="imgShow" style="width: 200px ;height: 200px"
+											 th:src="${session.user.headPath==null}?'/assets/avatars/profile-pic.jpg':'http://115.29.35.216'+${session.user.headPath}"/>
+									</div>
+									<div class="space-20"></div>
+									<input type="hidden" name="titleImg" id="imageUrl-detail"/>
+									<label class="ace-file-input ace-file-multiple">
+										<input name="filename" type="file" id="imageUrl"/>
+									</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<button type="reset" class="btn btn-sm" data-dismiss="modal">
+								<i class="ace-icon fa fa-times"></i>
+								取消
+							</button>
+
+							<button type="button" onclick="uploadHeadPath()" class="btn btn-sm btn-primary">
+								<i class="ace-icon fa fa-check"></i>
+								上传
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<script type="text/javascript" src="../../js/uploadPreview.js"></script>
+			<script type="text/javascript">
+				function uploadHeadPath(){
+					if($("#imageUrl").val()==''){
+						$(".close").click();
+						return;
+					}
+					$("#loadingDiv").show();
+					$("#imgForm").ajaxSubmit(function(data,res,me){
+						if(data){
+							alert("上传成功了！");
+							$("#imgForm").each(function(){
+								this.reset();
+							})
+							$(".close").click();
+							window.location.reload();
+						} else{
+							alert("修改失败了！");
+							$("#loadingDiv").hide();
+						}
+					});
+				}
+				function submitUser(item){
+					if($("#form2").valid()){
+						$("#form2").ajaxSubmit({
+							url: "/user/editMyInfo.json",
+							type: "POST",
+							dataType: "json",
+							beforeSend: function () {
+								$("#loadingDiv").show();
+								$(item).removeAttrs("onclick");
+							},
+							success: function (data) {
+								console.log(data)
+								if (data.flag) {
+									alert("提交成功")
+								} else {
+									alert(data.msg)
+								}
+							},
+							complete: function () {
+								window.location.reload();
+							}
+						});
+					}
+				}
+				//点击图片上传马上显示图片
+				$(function () {
+					new uploadPreview({UpBtn: "imageUrl", DivShow: "imgdiv", ImgShow: "imgShow"});
+				})
+			</script>
+			<script type="text/javascript">
+				jQuery(function($) {
+					$("#form2").validate({
+						checkStart : true,
+						errorElement: 'span',
+						errorClass: 'help-inline',
+						focusInvalid: true,
+						rules : {
+							userName:{
+								required:true
+							},
+							phone:{
+								required:true,
+								isMobile:true
+							},
+							email:{
+								required:true,
+								isEmail:"邮件格式不正确"
+							},
+							loginname : {
+								required: true,
+								remote: {
+									url: "/user/checkloginName.json",
+									type: "post",
+									cache:false,
+									async:false,
+									data: {
+										loginName: function () {
+											return $("#edit_loginname").val();
+										},
+										id: function () {
+											return $("#edit_id").val();
+										}
+									}
+								}
+							}
+						},
+						messages : {
+							userName : {
+								required:"必填"
+							},
+							phone:{
+								required:"必填",
+								isMobile:"手机号不正确"
+							},
+							email:{
+								required:"必填",
+								isEmail:"邮件格式不正确"
+							},
+							loginname :{
+								required:"必填",
+								remote: "登录名已使用"
+							}
+						},
+						highlight: function (e) {
+							$(e).removeClass('info').addClass('error');
+						}
+					});
+					$('#img-modal-form input[type=file]').ace_file_input({
+						style:'well',
+						btn_choose:'点击选择头像',
+						btn_change:null,
+						no_icon:'ace-icon fa fa-cloud-upload',
+						droppable:true,
+						allowExt:'jpg|png',
+					})
+				});
+			</script>
+		</div>
+	</div>
+	</body>
+</html>

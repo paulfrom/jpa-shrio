@@ -1,0 +1,88 @@
+/*Set default div border style begin*/
+.bor{width:100%;border:1px solid #6fb3e0;border-radius: 5px;}
+.lay{margin:20px auto;}
+/*Set default div border style end*/
+/*Set default span * begin */
+.star{color:red; margin-left:20px;}
+/*Set default span * end */
+
+/*Cover Div begin*/
+.cover{z-index:99;background:#747474;opacity:0.5;left:0;top:0px;-moz-opacity:0.5; -khtml-opacity:0.5;
+    filter:alpha(opacity=50);position:absolute;display:none;}
+/*Cover Div end*/
+
+/*Query div start*/
+#query{height:130px;padding:10px;}
+#query .item{width:100%; height:40px;margin:10px auto; padding:0 20px;text-align:left;}
+#query .item>label{width:60px;text-align:right;}
+#query .item>input{width:180px; margin:0 10px;}
+#query .item>select{width:180px; margin:0 6px;}
+#query .item>button{width:80px;border-radius: 5px;height:34px;margin-left:30px;padding:0;}
+/*Query div end*/
+
+/*customer information and buttons div start*/
+#customer{height:400px;overflow: scroll;}
+#customer>button{border-radius: 5px;width:100px;margin:5px 0px 5px 10px;height:36px;padding:0;}
+#customer table>tbody{text-align:center;}
+/*customer information and buttons div end*/
+
+/*New or modify customer start*/
+#add_custr_div{display:none;z-index:100;position:absolute;height:640px; width:800px;background:#fcfcfc;}
+#add_custr_div #title{font-weight:bold; height:40px;width:100%;margin:0 0 10px 0;background:#6fb3e0; color:#fcfcfc;}
+#add_custr_div #title p{line-height:34px;width:100%}
+#add_custr_div #title p span{text-align:left;color:#fcfcfc;margin-left:20px;}
+#add_custr_div #title p #close{margin-left:640px;color:#fcfcfc;}
+#add_custr_div div{margin:10px 0 0 100px;}
+#add_custr_div div label{width:60px; text-align:right;}
+#add_custr_div div input{border:1px solid #d5d5d5;}
+#add_custr_div div input[type="text"]{width:180px;height:34px;}
+#add_custr_div div select{width:180px;height:34px;}
+#add_custr_div div input[type="textarea"]{width:400px;height:100px;margin-left:26px;}
+#add_custr_div div table{width:600px;height:150px;border:1px solid #d5d5d5;border-collapse: collapse;}
+#add_custr_div div table tr td{height:30px;border:1px solid #d5d5d5;text-align:center;}
+#add_custr_div div button{border-radius: 5px;width:100px;margin:5px 0px 5px 10px;height:36px;padding:0;}
+#add_custr_div .contacts{margin-left:88px;display:none;}
+/*New or modify customer end*/
+/*Import customer div start*/
+#imp_cus{width:800px;height:600px;display:none;background:#fcfcfc;z-index:100;position:absolute;text-align:center;}
+#imp_cus h2{font-size:24px;margin:0px 0 30px 0;background:#6fb3e0;color:#fcfcfc;height:40px;line-height: 36px;}
+#imp_cus h2 a{color:#fcfcfc;float:right;width:50px;text-align:center;}
+#imp_cus div{width:500px;height:50px;margin:10px auto;}
+#imp_cus div label{width:100px;text-align:left;}
+#imp_cus div input{width:200px;height:34px;}
+#imp_cus div button{border-radius: 5px; margin-right:10px;height:40px;padding:0;width:100px;}
+/*Import customer div end*/
+
+/*Follow info start*/
+/*Set outer div width*/
+.followinfo{height:700px;}
+/*Set back button and new follow button start*/
+.followinfo .butdiv{width:90%;height:40px;text-aglign:left;margin:10px auto;}
+.followinfo .butdiv button{width:80px;height:40px;padding:0;line-height:36px;border-radius:5px;margin-right:10px;}
+/*Set back button and new follow button start*/
+
+/*Set follow list and customer detail info start*/
+.followinfo .contdiv{width:100%;height:650px;margin:10px auto;}
+.followinfo .contdiv div{width:550px;height:620px;float:left;margin:10px 1px 10px 0;}
+/*follow lists start*/
+.followinfo .contdiv .followlist{border-right:1px solid #6fb3e0;}
+.followinfo .contdiv .followlist table{width:500px;border:1px solid #d5d5d5;border-collapse: collapse;margin:20px 0 0 10px;}
+.followinfo .contdiv .followlist table tr td{width:40px;height:30px;border:1px solid #d5d5d5;text-align:center;}
+/*follow lists end*/
+/*Customer detail information start*/
+.followinfo .contdiv .custinfo div{width:500px;height:40px;margin:10px 0 0 20px;}
+.followinfo .contdiv .custinfo div label{width:80px;text-align:left;}
+.followinfo .contdiv .custinfo div input[type="text"]{width:180px;height:34px;}
+.followinfo .contdiv .custinfo div input[type="textarea"]{width:400px;height:100px;margin-left:0px;border:1px solid #d5d5d5;}
+.followinfo .contdiv .custinfo .contacts{margin-left:70px; width:430px; height:100px;}
+.followinfo .contdiv .custinfo .contacts table{width:400px;border:1px solid #d5d5d5;border-collapse: collapse;margin-left:10px;}
+.followinfo .contdiv .custinfo .contacts table tr td{width:40px;height:30px;border:1px solid #d5d5d5;text-align:center;}
+.followinfo .contdiv .custinfo .contacts{height:140px;}
+/*Customer detail information end*/
+/*Set follow list and customer detail info end*/
+/*Follow info end*/
+/*follow detail info begin*/
+.fdetail{width:100%;height:120px;padding-top:10px;margin-top:20px;}
+.fdetail table{width:400px;border:1px solid #d5d5d5;border-collapse: collapse;}
+.fdetail table tr td{width:40px;height:30px;border:1px solid #d5d5d5;text-align:center;}
+/*follow detail info end*/
